@@ -1,8 +1,11 @@
 import pandas as pd
+import re
 
-DATA_FROM_SPREADSHEET = 'data/master_dataset/MASTER_DATASET_V2_partial.csv'
+DATA_FROM_SPREADSHEET = 'data/master_dataset/MASTER_DATASET_V3.csv'
 GEO_LOOKUP = 'data/centroids/london_borough_centroids.csv'
-OUTFILE = 'data/dataset_for_visualisation/final_dataset_v1.csv'
+GEO_LOOKUP_MOH = 'data/geo_lookup/moh-place-mappings.csv'
+OUTFILE = 'data/dataset_for_visualisation/final_dataset_v3.csv'
+OUTFILE_2 = 'data/dataset_for_visualisation/final_dataset_v3_withMoh_names.csv'
 
 
 def prepare_dataset(
@@ -42,23 +45,80 @@ def prepare_dataset(
             latitude_list.append(0)
             longitude_list.append(0)
 
-    df['latitude'] = latitude_list
-    df['longitude'] = longitude_list
+    df['location_latitude'] = latitude_list
+    df['location_longitude'] = longitude_list
 
     df = df.fillna(0)
 
 
+
+    # Add Moh place
+    df_moh_places = pd.read_csv(GEO_LOOKUP_MOH)
+    print df_moh_places
+
+
+
     # Add URL
     list_of_bNumbers = list(df['source_bNumber'].values)
-    list_of_urls = ['https://dlcs.io/pdf/wellcome/pdf-item/' + x + '/0' for x in list_of_bNumbers]
+    list_of_urls = ['http://wellcomelibrary.org/item/' + x for x in list_of_bNumbers]
     df['source_url'] = list_of_urls
 
     df.to_csv(outfile, index=None)
 
 
+def get_oldLocationNames_to_currentBoroughNames(
+    lookup=GEO_LOOKUP_MOH,
+    infile=OUTFILE,
+    outfile=OUTFILE_2):
+    """
+    Transform the MOH name to a current borough name.
+    """
+
+    df = pd.read_csv(lookup)
+    df = df[['NormalisedPlace', 'NormalisedMoHPlace', 'MoHPlace']]
+    moh_places_list = list(df['MoHPlace'].values)
+    moh_name_list = list(df['NormalisedMoHPlace'].values)
+    borough_name_list = list(df['NormalisedPlace'].values)
+
+
+    # Replace spaces and punctuation to adapt to filenames of moh reports
+    moh_name_list = [x.replace(' ', '') for x in moh_name_list]
+    moh_name_list = [re.sub(r'[^\w\s]','', x) for x in moh_name_list]
+
+    # Make lowercase
+    moh_name_list = [x.lower() for x in moh_name_list]
+
+
+    dict_mohPlaceNormalised_to_currentLocation = dict(zip(moh_name_list, borough_name_list))
+    dict_mohPlace_to_mohPlaceNormalised = dict(zip(moh_name_list, moh_places_list))
+    # print dict_mohPlace_to_currentLocation
+
+    df = pd.read_csv(infile)
+    names_to_normalise = list(df['location_fromMOH'].values)
+
+    # Make lowercase
+    names_to_normalise = [x.lower() for x in names_to_normalise]
+
+    borough_name_list_normalised = []
+    moh_places = []
+    for x in names_to_normalise:
+        borough_name_list_normalised.append(dict_mohPlaceNormalised_to_currentLocation[x])
+        moh_places.append(dict_mohPlace_to_mohPlaceNormalised[x])
+        # moh_places.append(dict_mohPlace_to_currentLocation[x])
+
+    df['location_current'] = borough_name_list_normalised
+    df['location_mohPlace'] = moh_places
+    # print df
+    #
+    df.to_csv(outfile, index=None)
+
+
+
+
 def main():
     startTime = pd.datetime.now()
-    prepare_dataset()
+    # prepare_dataset()
+    get_oldLocationNames_to_currentBoroughNames()
     print '\nCompleted in ' + str(pd.datetime.now() - startTime)
 
 
