@@ -1,0 +1,60 @@
+classification_occupation,number_of_records,time_year
+Retail,1,1860
+Factory,1,1860
+Factory,2,1890
+Laundry,2,1890
+Domestic Service,2,1890
+Outwork,3,1890
+Other,1,1890
+Factory,7,1900
+Laundry,7,1900
+Domestic Service,4,1900
+Laundry,1,1900
+Other,4,1900
+Outwork,5,1900
+Factory,9,1910
+Laundry,5,1910
+Domestic Service,1,1910
+Other,2,1910
+Midwifery,2,1910
+Teaching,3,1910
+Nursing,1,1910
+Laundry,2,1920
+Factory,1,1920
+Medicine,1,1920
+Other,1,1920
+Teaching,2,1920
+Domestic Service,1,1930
+Factory,1,1930
+Laundry,1,1930
+Outwork,1,1930
+Laundry,1,1930
+Medicine,1,1930
+Midwifery,1,1930
+Domestic Service,2,1940
+Laundry,1,1940
+Factory,2,1940
+Medicine,1,1940
+Nursing,4,1940
+Teaching,1,1940
+Outwork,1,1940
+War work (WWII),3,1940
+Catering,1,1950
+Factory,3,1950
+Childcare,1,1950
+Laundry,2,1950
+Other,1,1950
+Nursing,2,1950
+Outwork,1,1950
+Childcare,1,1960
+Domestic Service,1,1960
+Health Visiting,1,1960
+Medicine,2,1960
+Teaching,1,1960
+Social Work,1,1960
+Midwifery,1,1960
+Health Visiting,1,1960
+Nursing,2,1960
+Social Work,2,1960
+Medicine,1,1970
+Nursing,1,1970
