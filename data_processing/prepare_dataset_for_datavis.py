@@ -1,11 +1,11 @@
 import pandas as pd
 import re
 
-DATA_FROM_SPREADSHEET = 'data/master_dataset/MASTER_DATASET_V3_20161104.csv'
+DATA_FROM_SPREADSHEET = 'data/master_dataset/MASTER_DATASET_FINAL.csv'
 GEO_LOOKUP = 'data/centroids/london_borough_centroids.csv'
 GEO_LOOKUP_MOH = 'data/geo_lookup/moh-place-mappings.csv'
-OUTFILE = 'data/dataset_for_visualisation/final_dataset_v4.csv'
-OUTFILE_2 = 'data/dataset_for_visualisation/final_dataset_v4_withMoh_names.csv'
+OUTFILE = 'data/dataset_for_visualisation/final_dataset_v5.csv'
+OUTFILE_2 = 'data/dataset_for_visualisation/final_dataset_v5_withMoh_names.csv'
 
 
 def prepare_dataset(
