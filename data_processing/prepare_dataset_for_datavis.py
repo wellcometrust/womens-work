@@ -1,11 +1,11 @@
 import pandas as pd
 import re
 
-DATA_FROM_SPREADSHEET = 'data/master_dataset/MASTER_DATASET_V3.csv'
+DATA_FROM_SPREADSHEET = 'data/master_dataset/MASTER_DATASET_V3_20161104.csv'
 GEO_LOOKUP = 'data/centroids/london_borough_centroids.csv'
 GEO_LOOKUP_MOH = 'data/geo_lookup/moh-place-mappings.csv'
-OUTFILE = 'data/dataset_for_visualisation/final_dataset_v3.csv'
-OUTFILE_2 = 'data/dataset_for_visualisation/final_dataset_v3_withMoh_names.csv'
+OUTFILE = 'data/dataset_for_visualisation/final_dataset_v4.csv'
+OUTFILE_2 = 'data/dataset_for_visualisation/final_dataset_v4_withMoh_names.csv'
 
 
 def prepare_dataset(
@@ -13,7 +13,8 @@ def prepare_dataset(
     lookup=GEO_LOOKUP,
     outfile=OUTFILE):
     """
-    Process the data from the Google Spreadsheet and prepare for visualisation.
+    Get the data from the Google Spreadsheet, add current location name, latitude,
+    longitude and URLs.
     """
 
     # Create geo dict
@@ -50,13 +51,9 @@ def prepare_dataset(
 
     df = df.fillna(0)
 
-
-
     # Add Moh place
     df_moh_places = pd.read_csv(GEO_LOOKUP_MOH)
     print df_moh_places
-
-
 
     # Add URL
     list_of_bNumbers = list(df['source_bNumber'].values)
@@ -91,7 +88,6 @@ def get_oldLocationNames_to_currentBoroughNames(
 
     dict_mohPlaceNormalised_to_currentLocation = dict(zip(moh_name_list, borough_name_list))
     dict_mohPlace_to_mohPlaceNormalised = dict(zip(moh_name_list, moh_places_list))
-    # print dict_mohPlace_to_currentLocation
 
     df = pd.read_csv(infile)
     names_to_normalise = list(df['location_fromMOH'].values)
@@ -104,20 +100,19 @@ def get_oldLocationNames_to_currentBoroughNames(
     for x in names_to_normalise:
         borough_name_list_normalised.append(dict_mohPlaceNormalised_to_currentLocation[x])
         moh_places.append(dict_mohPlace_to_mohPlaceNormalised[x])
-        # moh_places.append(dict_mohPlace_to_currentLocation[x])
 
     df['location_current'] = borough_name_list_normalised
     df['location_mohPlace'] = moh_places
-    # print df
-    #
+
     df.to_csv(outfile, index=None)
 
+    return
 
 
 
 def main():
     startTime = pd.datetime.now()
-    # prepare_dataset()
+    prepare_dataset()
     get_oldLocationNames_to_currentBoroughNames()
     print '\nCompleted in ' + str(pd.datetime.now() - startTime)
 
